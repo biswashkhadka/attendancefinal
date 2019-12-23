@@ -1,5 +1,5 @@
 {
-  "name": "myproject",
+  "name": "collegeattendance",
   "version": "1.0.0",
   "description": "my api project",
   "main": "index.js",
@@ -29,13 +29,21 @@
     "mocha": "^6.2.2"
   },
   "scripts": {
-    "dev": "./node_modules/.bin/eslint app.js && nodemon index.js",
-    "lint": "./node_modules/.bin/eslint app.js",
+    "dev": "eslint app.js && nodemon index.js",
+    "lint": "eslint app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "assign"
   ],
   "author": "self",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/biswashkhadka/attendancefinal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/biswashkhadka/attendancefinal/issues"
+  },
+  "homepage": "https://github.com/biswashkhadka/attendancefinal#readme"
 }
