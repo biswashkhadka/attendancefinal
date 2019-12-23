@@ -1,0 +1,41 @@
+{
+  "name": "myproject",
+  "version": "1.0.0",
+  "description": "my api project",
+  "main": "index.js",
+  "dependencies": {
+    "bcrypt": "^3.0.7",
+    "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "enlist": "^0.1.0",
+    "eslint": "^6.7.2",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mocha": "^6.2.2",
+    "multer": "^1.4.2",
+    "mysql2": "^2.0.2",
+    "nodemon": "^2.0.2",
+    "request": "^2.88.0",
+    "sequelize": "^5.21.3",
+    "swagger-jsdoc": "^3.5.0",
+    "swagger-ui-express": "^4.1.2",
+    "tedious": "^6.6.2"
+  },
+  "devDependencies": {
+    "eslint": "^6.7.2",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "mocha": "^6.2.2"
+  },
+  "scripts": {
+    "dev": "./node_modules/.bin/eslint app.js && nodemon index.js",
+    "lint": "./node_modules/.bin/eslint app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "assign"
+  ],
+  "author": "self",
+  "license": "ISC"
+}
