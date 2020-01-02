@@ -4,7 +4,7 @@ var dbConfig= require('../Config/databaseConfig.js')
 console.log(dbConfig.Sequelize)
 
 
-var user= dbConfig.sequelize.define('user',
+var student= dbConfig.sequelize.define('Studentuser',
 //attributes
 {
 	id:{
@@ -13,7 +13,23 @@ var user= dbConfig.sequelize.define('user',
 		autoIncrement: true,
 		allowNull: false
 	},
-	username:{
+	fullname:{
+		type:dbConfig.Sequelize.TEXT,
+		allowNull: false
+	},
+	address:{
+		type:dbConfig.Sequelize.TEXT,
+		allowNull: false
+	},
+	phoneno:{
+		type:dbConfig.Sequelize.TEXT,
+		allowNull: false
+	},
+	email:{
+		type:dbConfig.Sequelize.TEXT,
+		allowNull: false
+	},
+	batch:{
 		type:dbConfig.Sequelize.TEXT,
 		allowNull: false
 	},
@@ -22,17 +38,11 @@ var user= dbConfig.sequelize.define('user',
 		allowNull: false
 }
 },
-/*{
-	freezeTable:true, //tablename chnage garna yeo freezeTable garekooo
-	tableName:'user_table' //tablename changed
-
-
-}*/
 
 
 	)
 
-user.sync({force:false})
+student.sync({force:false})
 .then(function(result){
 	console.log(result);
 
@@ -42,4 +52,4 @@ user.sync({force:false})
 	console.log(err);
 })
 
-module.exports=user;
+module.exports=student;
