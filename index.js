@@ -5,7 +5,18 @@ var bodyParser = require('body-parser')
 var app = express();
 
 
+
+var studentModel= require('./Models/StudentModel.js');
+var studentcontroller =require('./Controllers/studentController.js');
+var authcontroller =require('./Controllers/AuthController.js');
 app.use(bodyParser.urlencoded({extended:true}));
+
+app.post('/registration', 
+	studentcontroller.validator, studentcontroller.checkIfUserExists,
+	  studentcontroller.getHash,studentcontroller.actualRegister)
+
+app.post('/login', authcontroller.validator, authcontroller.passwordChecker)
+
 
 
 //POSTMAN: to create localhost
