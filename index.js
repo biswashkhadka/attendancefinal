@@ -15,7 +15,7 @@ app.post('/registration',
 	studentcontroller.validator, studentcontroller.checkIfUserExists,
 	  studentcontroller.getHash,studentcontroller.actualRegister)
 
-app.post('/login', authcontroller.validator, authcontroller.passwordChecker)
+app.post('/login', authcontroller.validator, authcontroller.passwordChecker,authcontroller.jwtTokenGen)
 
 
 

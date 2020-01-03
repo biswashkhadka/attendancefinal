@@ -1,5 +1,6 @@
 var bcrypt = require('bcrypt');
 var user= require('../Models/StudentModel.js');
+var jwt = require('jsonwebtoken');
 
 
 
@@ -61,7 +62,44 @@ function passwordChecker(req,res,next){
 	});
 }
 
+function jwtTokenGen(req,res,next){
+	//console.log("here");
+	var myPayload = {
+		email:req.body.email
+		//password:req.body.password
+		//userLevel:'superadmin'
+	}
+	//var secretOrPrivateKey = 
+
+	jwt.sign(myPayload, 'secretOrPrivateKey', {expiresIn: "10h"}, function(err,result){
+		console.log(result);
+		console.log(err);
+		res.json({"user token": result})
+	})
+
+}
+
+
+	function verifyToken(req,res,next){
+	var token=	req.headers.authorization.slice(7,req.headers.authorization.length)
+
+		//console.log(req.headers.authorization)
+
+		jwt.verify(token,'secretOrPrivateKey', function(err,result){
+			//console.log(err,result)
+			if(result){
+				next();
+			}else{
+				//res.status(500)
+				res.json({status:500,message:'cannot delete'});
+				//next();
+			}
+
+		})
+
+	}
+
 
 module.exports={
 	passwordChecker,
-	validator}
+	validator,jwtTokenGen,verifyToken}
