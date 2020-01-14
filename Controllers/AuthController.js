@@ -37,17 +37,9 @@ else{
 
 function passwordChecker(req,res,next){
 	console.log(req.body.password)
-	//console.log(req.body.username)
-
-	//databaseko
-	//bcrypt.compare(req.body.password,result.dataValues)
+	
 	bcrypt.compare(req.body.password, req.xyz)
-	/*user.findOne({
-		where:{
-			username:req.body.username
-			password:req.body.password
-		}
-	})*/
+	
 	.then(function(result){
 		if(result === true){
 			next();
@@ -63,13 +55,12 @@ function passwordChecker(req,res,next){
 }
 
 function jwtTokenGen(req,res,next){
-	//console.log("here");
+
 	var myPayload = {
 		email:req.body.email
-		//password:req.body.password
-		//userLevel:'superadmin'
+		
 	}
-	//var secretOrPrivateKey = 
+
 
 	jwt.sign(myPayload, 'secretOrPrivateKey', {expiresIn: "10h"}, function(err,result){
 		console.log(result);
@@ -83,7 +74,7 @@ function jwtTokenGen(req,res,next){
 	function verifyToken(req,res,next){
 	var token=	req.headers.authorization.slice(7,req.headers.authorization.length)
 
-		//console.log(req.headers.authorization)
+	
 
 		jwt.verify(token,'secretOrPrivateKey', function(err,result){
 			//console.log(err,result)
@@ -102,4 +93,5 @@ function jwtTokenGen(req,res,next){
 
 module.exports={
 	passwordChecker,
-	validator,jwtTokenGen,verifyToken}
+	validator,jwtTokenGen
+	,verifyToken}

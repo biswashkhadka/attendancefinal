@@ -1,5 +1,5 @@
 
-
+var dbConfig = require('./Config/databaseConfig.js')
 var express = require('express');
 var bodyParser = require('body-parser')
 var app = express();
@@ -9,6 +9,7 @@ var app = express();
 var studentModel= require('./Models/StudentModel.js');
 var studentcontroller =require('./Controllers/studentController.js');
 var authcontroller =require('./Controllers/AuthController.js');
+
 app.use(bodyParser.urlencoded({extended:true}));
 
 app.post('/registration', 
@@ -16,6 +17,8 @@ app.post('/registration',
 	  studentcontroller.getHash,studentcontroller.actualRegister)
 
 app.post('/login', authcontroller.validator, authcontroller.passwordChecker,authcontroller.jwtTokenGen)
+
+app.delete('/user/:id', authcontroller.verifyToken, studentcontroller.deleteUser)
 
 
 

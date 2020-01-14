@@ -38,6 +38,9 @@ var student= dbConfig.sequelize.define('Studentuser',
 		allowNull: false
 }
 },
+{
+	paranoid:true
+}
 
 
 	)
