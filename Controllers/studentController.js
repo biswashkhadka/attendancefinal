@@ -53,7 +53,8 @@ function actualRegister(req,res,next){
 		phoneno:req.body.phoneno,
 		email:req.body.email,
 		batch:req.body.batch,
-		password:req.hashKey
+		password:req.hashKey,
+		image:req.body.image
 	})
 	.then(function(result){
 		//console.log(result);

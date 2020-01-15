@@ -36,7 +36,11 @@ var student= dbConfig.sequelize.define('Studentuser',
 	password:{
 		type:dbConfig.Sequelize.TEXT,
 		allowNull: false
-}
+},
+image:{
+		type:dbConfig.Sequelize.TEXT,
+		allowNull: false
+	},
 },
 {
 	paranoid:true
