@@ -24,6 +24,8 @@ app.post('/login', authcontroller.validator, authcontroller.passwordChecker,auth
 
 app.delete('/user/:id', authcontroller.verifyToken, studentcontroller.deleteUser)
 
+app.put('/update/:id', authcontroller.verifyToken, studentcontroller.editUser)
+
 
 
 //POSTMAN: to create localhost
