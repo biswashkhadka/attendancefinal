@@ -122,7 +122,43 @@ function actualRegister(req,res,next){
 	}); 
 }
 
+function editUser(req,res,next){
+		//console.log('deletehere')
+		if(req.params.id===null ||req.params.id===undefined){
+			/*res.status(404);
+			res.json({status:404, message: 'Id not provided'})*/
+	}
+	user.update({
+		fullname:req.body.fullname,
+		address:req.body.address,
+		phoneno:req.body.phoneno,
+		email:req.body.email,
+		batch:req.body.batch,
+		password:req.body.password,
+		image:req.body.image},
+		{
+
+		where:{
+			id:req.params.id
+		}
+	})
+	.then(function(result){
+		console.log(result);
+		if(result === 0){
+			//res.status(500);
+			res.json({status:500,message:"could not edit"})
+		}else
+		{
+		//res.status(200);
+			res.json({status:200,message:"user edited successfully"})
+	}
+	})
+	.catch(function(err){
+
+	}); 
+}
+
 
 	
 
-module.exports ={validator,checkIfUserExists, getHash, actualRegister, deleteUser}
+module.exports ={validator,checkIfUserExists, getHash, actualRegister, deleteUser, editUser}
