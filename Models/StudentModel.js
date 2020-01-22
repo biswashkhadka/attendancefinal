@@ -1,62 +1,41 @@
+var mongoose = require('mongoose');
 
+var studentSchema = new mongoose.Schema({
+    fullname: {
+        type: String,
+        required: true
+    },
+    phoneno: {
+        type: String,
+        required:true
+    },
+    address: {
+        type: String,
+        maxlength:8,
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    batch: {
+        type: String,
+        required: true,
+    },
 
-var dbConfig= require('../Config/databaseConfig.js')
-console.log(dbConfig.Sequelize)
+    password: {
+        type: String,
+        required: true,
+        minlength:6
+    },
+    
+    image: {
+        type: String
+    },
+    admin: {
+        type: Boolean,
+        default: false
+    }
+});
 
-
-var student= dbConfig.sequelize.define('Studentuser',
-//attributes
-{
-	id:{
-		type:dbConfig.Sequelize.INTEGER,
-		primaryKey: true,
-		autoIncrement: true,
-		allowNull: false
-	},
-	fullname:{
-		type:dbConfig.Sequelize.TEXT,
-		allowNull: false
-	},
-	address:{
-		type:dbConfig.Sequelize.TEXT,
-		allowNull: false
-	},
-	phoneno:{
-		type:dbConfig.Sequelize.TEXT,
-		allowNull: false
-	},
-	email:{
-		type:dbConfig.Sequelize.TEXT,
-		allowNull: false
-	},
-	batch:{
-		type:dbConfig.Sequelize.TEXT,
-		allowNull: false
-	},
-	password:{
-		type:dbConfig.Sequelize.TEXT,
-		allowNull: false
-},
-image:{
-		type:dbConfig.Sequelize.TEXT,
-		allowNull: false
-	},
-},
-{
-	paranoid:true
-}
-
-
-	)
-
-student.sync({force:false})
-.then(function(result){
-	console.log(result);
-
-
-})
-.catch(function(err){
-	console.log(err);
-})
-
-module.exports=student;
+module.exports = mongoose.model('student', studentSchema);
