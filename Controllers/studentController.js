@@ -1,164 +1,69 @@
-var bcrypt = require('bcrypt');
-var user= require('../Models/StudentModel.js');
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../Models/StudentModel');
+const router = express.Router();
+const auth = require('../auth');
 
-function validator(req,res,next){
-	//console.log(req,body);
-if(req.body.fullname === ''){
-		res.json({status:404,message:'fullname is required'})
+router.post('/signup', (req, res, next) => {
+    let password = req.body.password;
+    bcrypt.hash(password, 10, function (err, hash) {
+        if (err) {
+            let err =  new Error('Could not hash!');
+        err.status = 500;
+        return next(err);
+        }
+        User.create({
+            
+            fullname:req.body.fullname,
+            address:req.body.address,
+            phoneno:req.body.phoneno,
+            email:req.body.email,
+            batch:req.body.batch,
+            password: hash,
+            image: req.body.image
+        }).then((user) => {
+            let token = jwt.sign({ _id: user._id }, process.env.SECRET);
+            res.json({ status: "Signup success!", token: token });
+        }).catch(next);
+    });
+});
 
-}else if(req.body.address === ''){
-	res.json({status:404,message:'address is required'})
-}
-else if(req.body.phoneno === ''){
-	res.json({status:404,message:'phoneno is required'})
-}
+router.post('/login', (req, res, next) => {
+    User.findOne({ email: req.body.email })
+        .then((user) => {
+            if (user == null) {
 
-else if(req.body.email === ''){
-	res.json({status:404,message:'email is required'})
-}
-else if(req.body.batch === ''){
-	res.json({status:404,message:'batch is required'})
-}
-else if(req.body.password === ''){
-	res.json({status:404,message:'password is required'})}
-else{
-	//res.json({status:200, mess:'hagya'})
-	next();
-}
-}
+                let err = new Error('Email not found!');
+                err.status = 401;
+                return next(err);
+            } else {
+                bcrypt.compare(req.body.password, user.password)
+                    .then((isMatch) => {
+                        if (!isMatch) {
+                            let err = new Error('Password does not match!');
+                            err.status = 401;
+                            return next(err);
+                        }
+                        let token = jwt.sign({ _id: user._id }, process.env.SECRET);
+                        res.json({ status: 'Login success!', token: token });
+                    }).catch(next);
+            }
+        }).catch(next);
+})
 
-function getHash(req,res,next){
-	var saltRounds = 10;
-	bcrypt.hash(req.body.password, saltRounds, function(err, hash){
-		if(hash){
-			console.log(hash);
-			req.hashKey=hash;
-			//res.send(hash);
-			actualRegister(req,res,next);
-			//next();
-		}
-		if(err){
-			res.json({status:500, message:'couldnot hash the message'});
-			next();
-		}
-	});
+router.get('/me', auth.verifyUser, (req,res,next) =>{
+    res.json({_id:req.user._id,image:req.user.image});
+});
 
-}
-
-function actualRegister(req,res,next){
-	//db table ma insert garna
-	user.create({
-		fullname:req.body.fullname,
-		address:req.body.address,
-		phoneno:req.body.phoneno,
-		email:req.body.email,
-		batch:req.body.batch,
-		password:req.hashKey,
-		image:req.body.image
-	})
-	.then(function(result){
-		//console.log(result);
-		res.json({status:201, message:'registered successfully'});
-	})
-	.catch(function(err){
-		//console.log(err)
-		res.json(err);
-
-	})
-	}
-
-	function checkIfUserExists(req,res,next){
-		console.log("inside XX");
-		//check if username already exists
-		user.findOne({
-			where:{email:req.body.email}
-		})
-		.then(function(result){
-			//console.log(result);
-			//res.json(result);
-			console.log("inside check if user exist");
-			if(result == null){
-
-			console.log("inside check if user exist if");
-			next();
-		}else{
-
-			console.log("inside check if user existn else");
-			res.json({status:409, message:'email already exists'});
-		}
-		
-		})
-		.catch(function(err){
-		//console.log(err)
-		res.json(err);
-	})
-
-	}
-
-	function deleteUser(req,res,next){
-		//console.log('deletehere')
-		if(req.params.id===null ||req.params.id===undefined){
-			/*res.status(404);
-			res.json({status:404, message: 'Id not provided'})*/
-	}
-	user.destroy({
-		where:{
-			id:req.params.id
-		}
-	})
-	.then(function(result){
-		console.log(result);
-		if(result === 0){
-			//res.status(500);
-			res.json({status:500,message:"couldnot delete"})
-		}else
-		{
-		//res.status(200);
-			res.json({status:200,message:"user deleted successfully"})
-	}
-	})
-	.catch(function(err){
-
-	}); 
-}
-
-function editUser(req,res,next){
-		//console.log('deletehere')
-		if(req.params.id===null ||req.params.id===undefined){
-			/*res.status(404);
-			res.json({status:404, message: 'Id not provided'})*/
-	}
-	user.update({
-		fullname:req.body.fullname,
-		address:req.body.address,
-		phoneno:req.body.phoneno,
-		email:req.body.email,
-		batch:req.body.batch,
-		password:req.body.password,
-		image:req.body.image},
-		{
-
-		where:{
-			id:req.params.id
-		}
-	})
-	.then(function(result){
-		console.log(result);
-		if(result === 0){
-			//res.status(500);
-			res.json({status:500,message:"could not edit"})
-		}else
-		{
-		//res.status(200);
-			res.json({status:200,message:"user edited successfully"})
-	}
-	})
-	.catch(function(err){
-
-	}); 
-}
+router.get('/',(req,res,next)=>{
+    User.find({},(err,users)=>{
+        if (err) {
+            res.json(next)
+        }
+        res.json(users)
+    });
+});
 
 
-	
-
-module.exports ={validator,checkIfUserExists, getHash, actualRegister, deleteUser, editUser}
+module.exports = router;

@@ -1,22 +1,54 @@
-
-var dbConfig = require('./Config/databaseConfig.js')
 var express = require('express');
-var bodyParser = require('body-parser')
+var mongoose = require("mongoose");
+var morgan = require('morgan');
+var dotenv = require('dotenv').config();
+var auth = require('./auth');
+var cors = require('cors');
+
 var app = express();
-var multer = require('multer');
+app.use(morgan('tiny'));
+app.use(express.json());
+app.options('*', cors());
+app.use(express.urlencoded({extended: true }));
+
+var bodyParser = require('body-parser')
 app.use(express.static(__dirname + "/upload"));
 
-
+app.use(bodyParser.urlencoded({extended:true}));
 
 var studentModel= require('./Models/StudentModel.js');
 var studentcontroller =require('./Controllers/studentController.js');
-var authcontroller =require('./Controllers/AuthController.js');
 var uploadController = require("./Controllers/upload.js");
 app.use('/upload', uploadController);
 
 app.use(bodyParser.urlencoded({extended:true}));
 
-app.post('/registration', 
+mongoose.connect(process.env.URL, { useNewUrlParser: true, useUnifiedTopology: true, 
+	useFindAndModify: false, useCreateIndex: true })
+    .then((db) => {
+        console.log("Successfully connected to MongodB server");
+    }, (err) => console.log(err));
+
+app.use('/students', studentcontroller);
+app.use('/upload', uploadController);
+app.use(auth.verifyUser);
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.statusCode = 500;
+    res.json({ status: err.message });
+});
+
+app.listen(process.env.PORT, () => {
+    console.log(`App is running at localhost:${process.env.PORT}`);
+});
+
+
+
+
+
+
+/*app.post('/registration', 
 	studentcontroller.validator, studentcontroller.checkIfUserExists,
 	  studentcontroller.getHash,studentcontroller.actualRegister)
 
@@ -25,7 +57,7 @@ app.post('/login', authcontroller.validator, authcontroller.passwordChecker,auth
 app.delete('/user/:id', authcontroller.verifyToken, studentcontroller.deleteUser)
 
 app.put('/update/:id', authcontroller.verifyToken, studentcontroller.editUser)
-
+*/
 
 
 //POSTMAN: to create localhost
