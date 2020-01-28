@@ -17,8 +17,12 @@ app.use(express.static(__dirname + "/upload"));
 app.use(bodyParser.urlencoded({extended:true}));
 
 var studentModel= require('./Models/StudentModel.js');
+var teacher=require('./Models/teacher.js');
+var teacherController=require('./Controllers/teacherController');
 var studentcontroller =require('./Controllers/studentController.js');
 var uploadController = require("./Controllers/upload.js");
+var notecontroller = require("./Controllers/Notecontroller.js");
+var notemodel = require("./Models/Note.js");
 app.use('/upload', uploadController);
 
 app.use(bodyParser.urlencoded({extended:true}));
@@ -31,6 +35,8 @@ mongoose.connect(process.env.URL, { useNewUrlParser: true, useUnifiedTopology: t
 
 app.use('/students', studentcontroller);
 app.use('/upload', uploadController);
+app.use('/teacher', teacherController);
+app.use('/note', notecontroller);
 app.use(auth.verifyUser);
 
 app.use((err, req, res, next) => {
