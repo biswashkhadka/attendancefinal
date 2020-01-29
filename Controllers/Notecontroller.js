@@ -10,7 +10,7 @@ router.post('/addNote', (req, res, next) => {
             title:req.body.title,
             message:req.body.message,
             
-        }).then((user) => {
+        }).then((note) => {
            
             res.json({ status: "Note added success!" });
         }).catch(next);
