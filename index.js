@@ -23,6 +23,9 @@ var studentcontroller =require('./Controllers/studentController.js');
 var uploadController = require("./Controllers/upload.js");
 var notecontroller = require("./Controllers/Notecontroller.js");
 var notemodel = require("./Models/Note.js");
+var schedulecontroller = require("./Controllers/scheduleController.js");
+var schedulemodel = require("./Models/Schedule.js");
+
 app.use('/upload', uploadController);
 
 app.use(bodyParser.urlencoded({extended:true}));
@@ -37,6 +40,8 @@ app.use('/students', studentcontroller);
 app.use('/upload', uploadController);
 app.use('/teacher', teacherController);
 app.use('/note', notecontroller);
+app.use('/schedule', schedulecontroller);
+
 app.use(auth.verifyUser);
 
 app.use((err, req, res, next) => {
