@@ -4,10 +4,12 @@ var morgan = require('morgan');
 var dotenv = require('dotenv').config();
 var auth = require('./auth');
 var cors = require('cors');
+var connection = require('./TestFolder/dbtest');
 
 var app = express();
 app.use(morgan('tiny'));
 app.use(express.json());
+app.use(cors())
 app.options('*', cors());
 app.use(express.urlencoded({extended: true }));
 
@@ -22,7 +24,9 @@ var teacherController=require('./Controllers/teacherController');
 var studentcontroller =require('./Controllers/studentController.js');
 var uploadController = require("./Controllers/upload.js");
 var notecontroller = require("./Controllers/Notecontroller.js");
+var attendancecontroller = require("./Controllers/Attendance.js");
 var notemodel = require("./Models/Note.js");
+var attendancemodel = require("./Models/AttendanceModel.js");
 var schedulecontroller = require("./Controllers/scheduleController.js");
 var schedulemodel = require("./Models/Schedule.js");
 
@@ -36,12 +40,12 @@ mongoose.connect(process.env.URL, { useNewUrlParser: true, useUnifiedTopology: t
         console.log("Successfully connected to MongodB server");
     }, (err) => console.log(err));
 
-app.use('/students', studentcontroller);
+app.use('/', studentcontroller);
 app.use('/upload', uploadController);
 app.use('/teacher', teacherController);
 app.use('/note', notecontroller);
 app.use('/schedule', schedulecontroller);
-
+app.use('/attendance', attendancecontroller);
 app.use(auth.verifyUser);
 
 app.use((err, req, res, next) => {
@@ -50,12 +54,15 @@ app.use((err, req, res, next) => {
     res.json({ status: err.message });
 });
 
-app.listen(process.env.PORT, () => {
-    console.log(`App is running at localhost:${process.env.PORT}`);
-});
+connection.connect()
+  .then(() =>{
+    app.listen(process.env.PORT, () => {
+      console.log(`App is running at localhost:${process.env.PORT}`);
+    });
+  })
 
 
-
+module.exports= app;
 
 
 
@@ -72,22 +79,22 @@ app.put('/update/:id', authcontroller.verifyToken, studentcontroller.editUser)
 
 
 //POSTMAN: to create localhost
-app.get('/hospitallist', function(req,res,next){
-	console.log(req.query);
-	res.send('req received');
-})
+// app.get('/hospitallist', function(req,res,next){
+// 	console.log(req.query);
+// 	res.send('req received');
+// })
 
-app.post('/registration',function(req,res,next){
-	console.log(req.body);
-	res.send('req registration received');
-})
-app.listen(3001);
+// app.post('/registration',function(req,res,next){
+// 	console.log(req.body);
+// 	res.send('req registration received');
+// })
+// app.listen(3000);
 
-module.exports = app;
+// module.exports = app;
 
-app.get('/hospitalliust/:id',
-	function(req,res,next){
-		console.log(req);
-		res.send('req received')
-	}
-	)
+// app.get('/hospitalliust/:id',
+// 	function(req,res,next){
+// 		console.log(req);
+// 		res.send('req received')
+// 	}
+// 	)

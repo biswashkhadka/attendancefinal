@@ -53,7 +53,7 @@ router.post('/login', (req, res, next) => {
 })
 
 router.get('/me', auth.verifyUser, (req,res,next) =>{
-    res.json({_id:req.teacher._id,image:req.teacher.image});
+    res.json({_id:req.teacher._id, image:req.teacher.image, email: req.teacher.email, fullname: req.teacher.fullname, address:req.teacher.address,module: req.teacher.module,username:req.teacher.username});
 });
 
 router.get('/',(req,res,next)=>{
@@ -64,6 +64,13 @@ router.get('/',(req,res,next)=>{
         res.json(teachers)
     });
 });
+
+router.put('/update', auth.verifyUser, (req, res, next) => {
+    Teacher.findByIdAndUpdate(req.teacher._id, { $set: req.body }, { new: true })
+        .then((teacher) => {
+            res.json({ _id: teacher._id, email: req.teacher.email, fullname: req.teacher.fullname, address:teacher.address,module: teacher.module,username:teacher.username});
+        }).catch(next);
+})
 
 
 module.exports = router;
