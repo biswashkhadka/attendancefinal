@@ -5,13 +5,9 @@ var studentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    phoneno: {
-        type: String,
-        required:true
-    },
     address: {
         type: String,
-        maxlength:8,
+        maxlength:10,
     },
     email: {
         type: String,
@@ -23,18 +19,20 @@ var studentSchema = new mongoose.Schema({
         required: true,
     },
 
-    password: {
+    admissionnum: {
         type: String,
         required: true,
-        minlength:6
+        minlength:3,
+        unique:true
     },
-    
-    image: {
-        type: String
+    IOT:{
+        type:String,
     },
-    admin: {
-        type: Boolean,
-        default: false
+     Android:{
+        type:String,
+    },
+     API:{
+        type:String,
     }
 });
 
